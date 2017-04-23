@@ -62,7 +62,7 @@ axios.get('https://open.mapquestapi.com/guidance/v1/route?key=3PGmI1qMtvRxfCRA7F
     }
   }) 
   .then(function (res) {
-   res.json(res.data);
+   //rqes.json(res.data);
    console.log(res);
   })
   .catch(function (error) {

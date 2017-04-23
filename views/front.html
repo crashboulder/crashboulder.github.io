@@ -31,7 +31,8 @@
         }
         $scope.getOpenGuidance = function() {
           console.log('get openguidance');
-          $http.get('/openguidance')
+          $http.get('https://open.mapquestapi.com/guidance/v1/route?key=3PGmI1qMtvRxfCRA7FEpSxBKjFqVCX29&from=1555+Blake+St.,+Denver,+CO+80202&to=1701+Wynkoop+St,+Denver,+CO+80202')
+          // $http.get('/openguidance') // instead of this, why not use 
             .then(response => {
               $scope.openguidance = response.data.results;
               console.log('openguidance', $scope.openguidance);
@@ -40,6 +41,21 @@
         }
 
         }
+        var app = angular.module('myapp', []);
+app.controller('myctl', function($scope, $http) {
+  $scope.myjson = "Loading...";
+  $http({
+    method: 'GET',
+    url: 'https://open.mapquestapi.com/guidance/v1/route?key=3PGmI1qMtvRxfCRA7FEpSxBKjFqVCX29&from=1555+Blake+St.,+Denver,+CO+80202&to=1701+Wynkoop+St,+Denver,+CO+80202'
+  }).then(function successCallback(response) {
+    $scope.myjson = JSON.stringify(response);
+    $scope.realJSON = response;
+    $scope.copyright = $scope.realJSON.data.info.copyright.text;
+    $scope.collection = response.data.guidance.GuidanceLinkCollection;
+  }, function errorCallback(response) {
+    $scope.myjson = "Error";
+  });
+});
     </script>
   </head>
   <body>
@@ -65,10 +81,14 @@
             ng-repeat="item in searchahead">
             {{ item.collection }}
           </div>
-           <div class="row openguidance" 
-            ng-repeat="item in openguidance">
-            {{ openguidance }}
-          </div>
+          <div ng-app="myapp">
+  <div ng-controller="myctl">
+    <h1>List of All Guides</h1>
+    <ul>
+      <li ng-repeat="item in collection">Driveability: {{item.driveability}} <br> Speed: {{item.speed}}</li>
+    </ul>
+  </div>
+</div>
           <div class="row client" 
             ng-repeat="client in clients">
             <div class="client-container col-s12">
