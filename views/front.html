@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" ng-app>
+<head>
+<meta charset="UTF-8">
+<meta property="og:title" content="Crash Boulder">
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://crashboulder.com">
+<meta property="og:description" name="description" content="CrashBoulder">
+<meta name="author" content="Holly Kwan">
+<meta name="keyword" content="CrashBoulder, Boulder, Boulder Recommendation">
+<meta name="viewport" content="width=device-width">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+<base href="/angular-client">
+<title>CRASHBOULDER</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    padding-top: 20px;
+}
+</style>
+<script>
+      function MQIOController($scope, $http) {
+        $scope.searchahead = [];
+        $scope.getSearchAhead = function() {
+          console.log('get searchahead');
+          $http.get('/searchahead')
+            .then(response => {
+              $scope.searchahead = response.data.results;
+              console.log('searchahead', $scope.searchahead);
+              return $scope.searchahead;
+            });
+        }
+        }
+    </script>
+  </head>
+  <body>
+    <div class="container" 
+      ng-controller="MQIOController">
+      <div class="page-header">
+        <h1>CrashBoulder</h1>
+        <p1>Boulder Recommendation</p1>
+        <br>
+        <p2>CrashBoulder help you to crash 'boulder' and better</p2>
+      </div>
+      <div class="row">
+        <div class="col-s6">
+          <button ng-click="getSearchAhead()">
+            Click here to crash Boulder
+          </button>
+        </div>
+        <div class="col-s6">
+          <div class="row searchahead" 
+            ng-repeat="item in searchahead">
+            {{ item.collection }}
+          </div>
+          <div class="row client" 
+            ng-repeat="client in clients">
+            <div class="client-container col-s12">
+              <strong>{{client.appId}}-{{client.label}}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+  </body>
+</html>
