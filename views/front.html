@@ -14,14 +14,12 @@
 <base href="/angular-client">
 <title>CRASHBOULDER</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {
-    padding-top: 20px;
-}
-</style>
 <script>
       function MQIOController($scope, $http) {
+
         $scope.searchahead = [];
+        $scope.openguidance = [];
+
         $scope.getSearchAhead = function() {
           console.log('get searchahead');
           $http.get('/searchahead')
@@ -31,6 +29,16 @@
               return $scope.searchahead;
             });
         }
+        $scope.getOpenGuidance = function() {
+          console.log('get openguidance');
+          $http.get('/openguidance')
+            .then(response => {
+              $scope.openguidance = response.data.results;
+              console.log('openguidance', $scope.openguidance);
+              return $scope.openguidance;
+            });
+        }
+
         }
     </script>
   </head>
@@ -48,11 +56,18 @@
           <button ng-click="getSearchAhead()">
             Click here to crash Boulder
           </button>
+          <button ng-click="getOpenGuidance()">
+            Click here to route Boulder
+          </button>
         </div>
         <div class="col-s6">
           <div class="row searchahead" 
             ng-repeat="item in searchahead">
             {{ item.collection }}
+          </div>
+           <div class="row openguidance" 
+            ng-repeat="item in openguidance">
+            {{ openguidance }}
           </div>
           <div class="row client" 
             ng-repeat="client in clients">

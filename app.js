@@ -20,14 +20,16 @@ var server = http.createServer(router);
 var sdk = require('@mapquest/io') ;
 var appContext = new sdk.ApplicationContext('hollys-app', 'f2b83527-0a78-4fc7-a553-ba77ae7e6303') ;
 
+/* front.html is the static html file */
 router.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname+'/views/front.html'));
 })
-
+/* First test on get method */
 router.get('/test', (req, res, next) => {
   console.log('test request', request.params);
   response.send('HACKCU');
 });
+/* For MapQuest.io */
 router.get('/clients', (req, res, next) => {
   appContext.clients.list()
     .then(clientList => {
@@ -36,8 +38,8 @@ router.get('/clients', (req, res, next) => {
       return subClientList;
     })
     .then(clients => response.send({clients}), next);
-
 });
+/* MapQuest Search Ahead */
 router.get('/searchahead', function (req, res) {
 axios.get('https://www.mapquestapi.com/search/v3/prediction?&limit=5&collection=adminArea,poi,address,category,franchise,airport&q=den', {
     params: {
@@ -52,14 +54,37 @@ axios.get('https://www.mapquestapi.com/search/v3/prediction?&limit=5&collection=
     console.log(error);
   });
 });
+/* MapQuest Open Guidance API*/
+router.get('/openguidance', (req, res, next) => {  
+axios.get('https://open.mapquestapi.com/guidance/v1/route?key=3PGmI1qMtvRxfCRA7FEpSxBKjFqVCX29&from=1555+Blake+St.,+Denver,+CO+80202&to=1701+Wynkoop+St,+Denver,+CO+80202', {
+    params: {
+      key: '3PGmI1qMtvRxfCRA7FEpSxBKjFqVCX29'
+    }
+  }) 
+  .then(function (res) {
+   res.json(res.data);
+   console.log(res);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+});
+/* In MapQuest.io, a geofence is a virtually-defined region and a device’s movement relative to that region. */
 router.get('/geofences', (req, res, next) => {
   appContext.geofences.list()
     .then(geofenceList => {
       console.log('geofence list', Object.keys(geofenceList), geofenceList.geofences.length);
       return geofenceList.geofences.slice(0, 5);
     })
-    .then(geofences => response.send({ geofences }), next);
+    .then(function (res) {
+      res.json(res.data);
+      console.log(res);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 });
+/* Speed alerts are a way for your system to be notified when a device goes above a certain rate of travel. */
 router.get('/speed-alerts', (req, res, next) => {
   appContext.speedAlerts.list()
     .then(speedAlertList => {
